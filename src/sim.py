@@ -1,4 +1,5 @@
 from scipy.integrate import odeint
+import numpy as np
 
 class yamada_model:
 	def __init__(self, s=10, mu1=2.43, mu2=2, eta=1.6, beta=10**(-5), b1=0.005, b2=0.005):
