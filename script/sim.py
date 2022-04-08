@@ -37,4 +37,3 @@ class yamada_model:
     
     def integrate(self, t, dt=0, perturbation=0):
         self.sol = odeint(self.yamada_ode, [self.G0, self.Q0, self.I0], t, args = (dt, perturbation))
-        self.sol = self.sol.tolist()
