@@ -1,3 +1,4 @@
+
 import numpy as np
 import math
 import scipy as sp
@@ -32,7 +33,10 @@ for i in range(len(dt)):
 fig, axs = plt.subplots(4, 2, sharex = True)
 axs[0, 0].plot(t, netgain[0],color = 'r', label = '$\Delta t = 5$')
 axs[0, 0].text(1500, 1.6, '$\Delta t = 80$', fontsize = 10)
+axs[0, 0].text(30, 1.7, '$\mu_1 = 2.43$', fontsize = 10)
+axs[0, 0].text(750, 1.68, 'Net Gain', fontsize = 10)
 axs[0, 1].plot(t, Intensity[0],color = 'r')
+axs[0, 1].text(750, 0.00056, 'Intensity', fontsize = 10)
 
 axs[1, 0].plot(t, netgain[1],color = 'green', label = '$\Delta t = 20$')
 axs[1, 1].plot(t, Intensity[1], color = 'green')
@@ -46,5 +50,5 @@ axs[3, 0].plot(t, netgain[3],color = 'orange', label = '$\Delta t = 600$')
 axs[3, 1].plot(t, Intensity[3],color = 'orange')
 axs[3, 0].text(1500, 2.5, '$\Delta t = 600$', fontsize = 10)
 plt.xlabel("Time (u.arb)")
-fig.suptitle('blabla')
+fig.suptitle('Net gain and Intensity for different perturbation time periods')
 plt.show()
