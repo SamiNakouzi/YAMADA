@@ -19,7 +19,7 @@ netgain, Intensity, G = [], [], []
 pert = np.zeros((4000, len(dt)))
 
 # Initiate Yamda simulator 
-model1 = yamada_model(mu1 = 2.43)
+model = yamada_model(mu1 = 2.43)
 
 # iterate over the simulation
 for i in range(len(dt)):
@@ -43,28 +43,29 @@ for i in range(len(dt)):
 fig, axs = plt.subplots(4, 2, sharex = True)
 axs[0, 0].plot(t, netgain[0],color = 'r', label = '$\Delta t = 5$')
 axs[0, 0].text(1500, 1.6, '$\Delta t = 80$', fontsize = 10)
-axs[0, 0].text(30, 1.7, '$\mu_1 = 2.43$', fontsize = 10)
-axs[0, 0].text(750, 1.68, 'Net Gain', fontsize = 10)
+axs[0, 0].text(30, 2.2, '$\mu_1 = 2.43$', fontsize = 10)
+axs[0, 0].text(750, 2.18, 'Net Gain', fontsize = 10)
 
 axs[0, 1].plot(t, Intensity[0], color = 'r')
 axs[0, 1].text(750, 0.00056, 'Intensity', fontsize = 10)
-axs[0, 1].plot(t, pert[:,0], color='g')
+axs[0, 0].plot(t, pert[:,0] - 1, color='k', alpha = 0.6, label = 'perturbation')
 
 axs[1, 0].plot(t, netgain[1],color = 'green', label = '$\Delta t = 20$')
 axs[1, 1].plot(t, Intensity[1], color = 'green')
 axs[1, 0].text(1500, 1.65, '$\Delta t = 130$', fontsize = 10)
-axs[1, 1].plot(t, pert[:,1], color='g')
+axs[1, 0].plot(t, pert[:,1] - 1, color='k', alpha = 0.6)
 
 axs[2, 0].plot(t, netgain[2],color = 'blue', label = '$\Delta t = 500$')
 axs[2, 1].plot(t, Intensity[2],color = 'blue')
 axs[2, 0].text(1500, 2.5, '$\Delta t = 500$', fontsize = 10)
-axs[2, 1].plot(t, pert[:,2], color='g')
+axs[2, 0].plot(t, pert[:,2] - 1, color='k', alpha = 0.6)
 
 axs[3, 0].plot(t, netgain[3],color = 'orange', label = '$\Delta t = 600$')
 axs[3, 1].plot(t, Intensity[3],color = 'orange')
 axs[3, 0].text(1500, 2.5, '$\Delta t = 600$', fontsize = 10)
-axs[3, 1].plot(t, pert[:,3], color='g')
-
+axs[3, 0].plot(t, pert[:,3] - 1, color='k', alpha = 0.6)
+fig.legend()
 plt.xlabel("Time (u.arb)")
 fig.suptitle('Net gain and Intensity for different perturbation time periods')
+
 plt.show()
