@@ -31,7 +31,8 @@ for i in range(len(dt)):
         
 for i in range(len(temp)):
     if inv_dmu[i] == inv_dmu[i+1]:
-        threashold = temp[i]
+        threashold = 0.5 * (temp[i] + temp[i-1])
+        error = 0.5 * (temp[i] - temp[i-1])
         break
 
 #Ploting:
@@ -42,7 +43,7 @@ plt.vlines(threashold, color = 'blue',ymin = min(inv_dmu), ymax = max(inv_dmu), 
 plt.plot(temp, inv_dmu, '--k', alpha = 0.5)
 plt.xlabel('$\Delta t$')
 plt.ylabel('$\dfrac{1}{\delta \mu}$', rotation=0, fontsize=12, labelpad=20)
-plt.text(threashold, min(inv_dmu)-0.1, '$\Delta t =$' + str("%.2f" % threashold))
+plt.text(threashold, min(inv_dmu)-0.1, '$\Delta t =$' + str("%.2f" % threashold) + '$ \pm $'+ str("%.2f" % error))
 plt.text(100, max(inv_dmu) + 0.3, "$\mu1 = 2.43$")
 plt.title('$\dfrac{1}{\delta \mu} Vs \Delta t$')
 plt.show()
