@@ -5,7 +5,7 @@ from scipy.interpolate import interp1d
 
 	
 class yamada_model:
-	def __init__(self, s=10, mu1 = 2.8, mu2 = 2, eta1 = 1.6, beta = 10**(-5), b1 = 0.005, b2 = 0.005):
+	def __init__(self, s=10, mu1 = 2.43, mu2 = 2, eta1 = 1.6, beta = 10**(-5), b1 = 0.005, b2 = 0.005):
 		self.s = s
 		self.mu1 = mu1
 		self.mu2 = mu2
@@ -22,17 +22,21 @@ class yamada_model:
 		self.sol  = None
 		self.pert = None
 		
-	def perturbate(self, dt, eps):
-		samples_t = np.linspace(0, 2000, 4000)
-		samples   = []		
-		for elem in samples_t:
-			if elem >= 300 and elem < 300+dt:
-				samples.append(self.mu1 + eps)
-			else:
-				samples.append(self.mu1) 	
-
-		samples_t, samples = np.array(samples_t), np.array(samples)
-		self.pert = interp1d(samples_t, samples, bounds_error=False, fill_value="extrapolate")
+	def perturbate(self, t = np.linspace(0, 2000, 2000), dt = 0, eps = 0, bits = [1], pert_timing = [300], neg_pulse = False):
+            samples_t = t
+            samples   = []
+            perturbation = np.zeros((len(samples_t),))
+            for idx, elem in enumerate(pert_timing):
+                if bits[idx] == 1:
+                    perturbation[elem : elem + dt] = eps
+                    idx = idx +1
+                elif bits[idx] == 0 and neg_pulse == True:
+                    perturbation[elem : elem + dt] = -eps
+                    idx = idx + 1
+            samples = self.mu1 + perturbation
+        
+            samples_t, samples = np.array(samples_t), np.array(samples)
+            self.pert = interp1d(samples_t, samples, bounds_error=False, fill_value="extrapolate")
 
 	
 	def yamada_ode(self, y0, t):
