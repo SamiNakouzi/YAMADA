@@ -3,52 +3,84 @@ import matplotlib.pyplot as plt
 from scipy.integrate import odeint
 from scipy.interpolate import interp1d
 from sim import yamada_model
+import itertools
+import random
 
+net_gain_list = []
+min_net = []
 #Running simulation
 model = yamada_model(mu1 = 2.8)
 
 #setting time steps:
-t = np.linspace(0, 1500, 1501)
+t = np.linspace(0, 1000, 1001)
 
 #perturbation amplitude
-eps = 1
+rand = random.randint(0, 5)
+eps =  [0.4, 0.6]#list(itertools.permutations([0.25, 0.35, 0.45]))[rand]# * nb_of_bits
+
+#number of bits:
+nb_of_bits = len(eps)
 
 #pertuurbation duration:
-dt = 150
+dt = [50] * nb_of_bits
 
 #random bits
-bit = [1, 1, 1]#np.random.randint(0, 2, 100)
+bit = [1] * nb_of_bits#.random.randint(0, 2, 100)
 
 #perturbation timing:
-nb_of_bits = 2
 #pert_t = np.arange(0, len(t)-1, int((len(t)-1)/nb_of_bits))
-pert_t = [200, 500, 800]
+pert_t = [100, 200]
 
 #bit time:
-bit_time = 200
+bit_time = 100
 t_b = []
 for idx in range(len(pert_t)):
-    t_b.append(pert_t[idx])
-    t_b.append(pert_t[idx] + bit_time)
+    t_b.append(100 + (bit_time * idx))
 
-#Running pertuurbation + solving model
-model.perturbate(t, dt, eps, bit, pert_t)#, True)
-model.integrate(t)
-x = model.sol.tolist()
+
+
+#Defining the Perturbation:
+def perturbate(t = np.linspace(0, 2000, 2000), dt = [0], eps = [0], bits = [1], pert_timing = [300], neg_pulse = False):
+    samples_t = t
+    samples   = []
+    perturbation = np.zeros((len(samples_t),))
+    for idx, elem in enumerate(pert_timing):
+        if bits[idx] == 1:
+            perturbation[elem : elem + dt[idx]] = eps[idx]
+            idx = idx +1
+        elif bits[idx] == 0 and neg_pulse == True:
+            perturbation[elem : elem + dt[idx]] = -eps[idx]
+            idx = idx + 1
+    samples = model.mu1 + perturbation
+
+    samples_t, samples = np.array(samples_t), np.array(samples)
+    return interp1d(samples_t, samples, bounds_error=False, fill_value="extrapolate")
 
 net_gain = []
 intensity = []
-
+#Running pertuurbation + solving model
+pert = perturbate(t, dt, eps, bit, pert_t)
+model.perturbate(pert)
+model.integrate(t)
+x = model.sol.tolist()
 for idx in range(0, len(t)):
     net_gain.append(x[idx][0] - x[idx][1] - 1)
     intensity.append(x[idx][2])
 
+print(max(net_gain))
+
+#PLOTTING
+#plt.plot(eps, net_gain_list)
 fig, axs = plt.subplots(3, 1, sharex = True)
 axs[0].plot(t, net_gain, color = 'g', label = 'net gain')
-axs[1].plot(t, model.pert(t) - 3, color = 'k', alpha = 0.5,  label = 'scaled perturbation')
+axs[0].set_ylim(top = 2)
+axs[1].plot(t, model.incoh_pert(t), color = 'k', alpha = 0.5,  label = 'scaled perturbation')
+axs[1].set_ylim(top = (max(eps) + model.mu1 + 0.2))
+axs[0].text(100, 2.1, "$\mu_1 = $" + str(model.mu1), fontsize = 8)
 for idx in range(len(pert_t)):
     axs[0].text(pert_t[idx], 1.3, str(bit[idx]), fontsize = 13)
-    axs[2].vlines(pert_t[idx], color = 'blue',ymin = 0, ymax = max(intensity) + 10, ls = '--')
+    axs[1].text(pert_t[idx], max(eps) + model.mu1 + 0.1, str(eps[idx]), fontsize = 8)
+    axs[2].vlines(t_b[idx], color = 'blue',ymin = 0, ymax = max(intensity) + 10, ls = '--')
 plt.ylabel("Intensity (u.arb)")
 
 

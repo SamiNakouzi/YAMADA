@@ -20,50 +20,41 @@ class yamada_model:
         self.dQft = None
         self.dIdt = None
         self.sol  = None
-        self.pert = None
+        self.sol_list = []
+        self.time_cut = []
+        self.incoh_pert = None
+        self.coh_pert = None
 
 
-    def perturbate_amps(self, t = np.linspace(0, 2000, 2000), dt = 0, eps = [0], bits = [1], pert_timing = [300], neg_pulse = False):
-        samples_t = t
-        samples   = []
-        perturbation = np.zeros((len(samples_t),))
-        for idx, elem in enumerate(pert_timing):
-            if bits[idx] == 1:
-                perturbation[elem : elem + dt[idx]] = eps[idx]
-                idx = idx +1
-            elif bits[idx] == 0 and neg_pulse == True:
-                perturbation[elem : elem + dt[idx]] = -eps[idx]
-                idx = idx + 1
-        samples = self.mu1 + perturbation
+    def perturbate(self, incoh_perturbation = 0, coh_perturbation = 0):
+        if incoh_perturbation ==0:
+            self.incoh_pert = self.mu1
+        else:
+            self.incoh_pert = incoh_perturbation
+        if coh_perturbation == 0:
+            self.coh_pert = self.I0
+        else:
+            self.coh_pert = coh_perturbation
 
-        samples_t, samples = np.array(samples_t), np.array(samples)
-        self.pert = interp1d(samples_t, samples, bounds_error=False, fill_value="extrapolate")
-
-
-
-    def perturbate(self, t = np.linspace(0, 2000, 2000), dt = 0, eps = 0, bits = [1], pert_timing = [300], neg_pulse = False):
-        samples_t = t
-        samples   = []
-        perturbation = np.zeros((len(samples_t),))
-        for idx, elem in enumerate(pert_timing):
-            if bits[idx] == 1:
-                perturbation[elem : elem + dt] = eps
-                idx = idx +1
-            elif bits[idx] == 0 and neg_pulse == True:
-                perturbation[elem : elem + dt] = -eps
-                idx = idx + 1
-        samples = self.mu1 + perturbation
-
-        samples_t, samples = np.array(samples_t), np.array(samples)
-        self.pert = interp1d(samples_t, samples, bounds_error=False, fill_value="extrapolate")
 
 
     def yamada_ode(self, y0, t):
-        self.dGdt = self.b1*(self.pert(t) - y0[0] - y0[0]*y0[2])
+        self.dGdt = self.b1*(self.incoh_pert(t) - y0[0] - y0[0]*y0[2])
         self.dQdt = self.b2*(self.mu2 - y0[1] - self.s*y0[1]*y0[2])
         self.dIdt = y0[2]*(y0[0] - y0[1] - 1) + self.beta*(y0[0] + self.eta1)**2
 
         return [self.dGdt, self.dQdt, self.dIdt]
 
+    #def integrate(self, t, pert_timing, dt, nb_of_bits):
+        #for idx in range(nb_of_bits):
+            #self.time_cut.append(min(t))
+            #self.sol = odeint(self.yamada_ode, [self.G0, self.Q0, self.coh_pert], np.linspace(max(self.time_cut), pert_timing[idx], int(pert_timing[idx] - max(self.time_cut)+1)))
+            #self.time_cut.append(pert_timing[idx])
+            #self.sol_list.append(self.sol)
+            #self.sol = odeint(self.yamada_ode, [self.G0, self.Q0, self.coh_pert], np.linspace(max(self.time_cut), pert_timing[idx] + dt[idx],pert_timing[idx] + dt[idx] + int(max(self.time_cut)+1)))
+            #self.time_cut.append(pert_timing[idx]+dt[idx])
+            #self.sol_list.append(self.sol)
+        #self.sol_list.append(odeint(self.yamada_ode, [self.G0, self.Q0, self.coh_pert], (max(self.time_cut), max(t), max(t) + max(self.time_cut)+1)))
+        
     def integrate(self, t):
-        self.sol = odeint(self.yamada_ode, [self.G0, self.Q0, self.I0], t)
+        self.sol = odeint(self.yamada_ode, [self.G0, self.Q0, self.coh_pert], t)
