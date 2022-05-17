@@ -40,8 +40,8 @@ class yamada_model:
 
     def yamada_ode(self, y0, t):
         self.dGdt = self.b1*(self.incoh_pert(t) - y0[0] - y0[0]*y0[2])
-        self.dQdt = self.b2*(self.mu2 - y0[1] - self.s*y0[1]*y0[2])
-        self.dIdt = y0[2]*(y0[0] - y0[1] - 1) + self.beta*(y0[0] + self.eta1)**2
+        self.dQdt = self.b2*(self.mu2 - y0[1] - self.s*y0[1]*(y0[2]))
+        self.dIdt = (y0[2])*(y0[0] - y0[1] - 1) + self.beta*(y0[0] + self.eta1)**2
 
         return [self.dGdt, self.dQdt, self.dIdt]
 
@@ -57,4 +57,4 @@ class yamada_model:
         #self.sol_list.append(odeint(self.yamada_ode, [self.G0, self.Q0, self.coh_pert], (max(self.time_cut), max(t), max(t) + max(self.time_cut)+1)))
         
     def integrate(self, t):
-        self.sol = odeint(self.yamada_ode, [self.G0, self.Q0, self.coh_pert], t)
+        self.sol = odeint(self.yamada_ode, [self.G0, self.Q0, self.I0], t)
