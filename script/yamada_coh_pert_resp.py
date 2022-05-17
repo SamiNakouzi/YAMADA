@@ -11,7 +11,7 @@ from matplotlib.animation import FuncAnimation
 
 #Initial Conditions:
 s = 10
-mu1 = 2.43
+mu1 = 2.8
 mu2 = 2
 eta1 = 1.6
 beta = 10**(-5)
@@ -30,7 +30,7 @@ def yamada_ode(x, t, perturbation):
     B = 10**(-5)
     eta1 = 1.6
     dI = perturbation
-    pI = x[2] + dI*math.exp(-((t/10)-30)**100)
+    pI = x[2] - dI*math.exp(-((t/10)-30)**100)
 
 
     #assign vector to each ODE:
@@ -39,8 +39,8 @@ def yamada_ode(x, t, perturbation):
     I = x[2]
 
     #define each ODE:
-    dGdt = b1*(mu1 - G - G*pI)
-    dQdt = b2*(mu2 - Q - s*Q*pI)
+    dGdt = b1*(mu1 - G - G*I)
+    dQdt = b2*(mu2 - Q - s*Q*I)
     dIdt = pI*(G - Q - 1) + B*(G + eta1)**2
 
     return [dGdt, dQdt, dIdt]
@@ -62,30 +62,30 @@ per = []
 #########################
 
 
-for p in np.arange(0, 10, 0.01):
-    perturbation = (p,)
-    per.append(p)
-    #x0 = [2.43, 2, 0 ]
-    x = odeint(yamada_ode, x0, t, perturbation)
-    x = x.tolist()
-    for j in range(0, 1000):
-        G.append(x[j][0])
-        Q.append(x[j][1])
-        I.append(x[j][2])
-    Resp.append(max(I))
-    #I = []
+
+perturbation = (0.5,)
+#per.append(p)
+#x0 = [2.43, 2, 0 ]
+x = odeint(yamada_ode, x0, t, perturbation)
+x = x.tolist()
+for j in range(0, 1000):
+    G.append(x[j][0])
+    Q.append(x[j][1])
+    I.append(x[j][2])
+Resp.append(max(I))
+#I = []
 
 
-per = np.array(per)
-G = np.array(G)
-Q = np.array(Q)
-I = np.array(I)
-Resp = np.array(Resp)
-nG = G - Q - 1
+#per = np.array(per)
+#G = np.array(G)
+#Q = np.array(Q)
+#I = np.array(I)
+#Resp = np.array(Resp)
+#nG = G - Q - 1
 
 
 style.use("seaborn")
-plt.plot(per, Resp, color='green')
+plt.plot(t, I, color='green')
 plt.xlabel('Perturbation')
 plt.ylabel('Response (arb.u)')
 plt.title('Laser response Vs Perturbation for a coherent perturbation')
