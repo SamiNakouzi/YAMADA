@@ -11,12 +11,12 @@ def yamada_ode(x, t, perturbation):
     b1 = 0.005
     b2 = 0.005
     s = 10
-    mu1 = 2.43
+    mu1 = 2.8
     mu2 = 2
     B = 10**(-5)
     eta1 = 1.6
     dmu1 = perturbation
-    pmu1 = mu1 + dmu1*math.exp(-((t/10)-30)**100)
+    pmu1 = mu1 + dmu1*math.exp(-((t/25)-15)**100)
 
 
     #assign vector to each ODE:
@@ -31,7 +31,7 @@ def yamada_ode(x, t, perturbation):
 
     return [dGdt, dQdt, dIdt]
 
-x0 = [2.43, 2, 0]
+x0 = [2.8, 2, 0]
 Q = []
 I = []
 G = []
@@ -48,7 +48,7 @@ per = []
 #########################
 
 
-for p in (0, 0.8, 2, 6):
+for p in (0, 0.4, 0.85, 1):
     perturbation = (p,)
     per.append(p)
     #x0 = [2.43, 2, 0 ]
@@ -71,11 +71,11 @@ nG = G - Q - 1
 for time in t:
     p1 = per[0]*math.exp(-((time/10)-30)**100)
     P1.append(p1)
-    p2 =0.0006*per[1]*math.exp(-((time/10)-30)**100)
+    p2 =0.006*per[1]*math.exp(-((time/10)-30)**100)
     P2.append(p2)
-    p3 = 0.0005*per[2]*math.exp(-((time/10)-30)**100)
+    p3 = 100*per[2]*math.exp(-((time/10)-30)**100)
     P3.append(p3)
-    p4 = 0.001*per[3]*math.exp(-((time/10)-30)**100)
+    p4 = 100*per[3]*math.exp(-((time/10)-30)**100)
     P4.append(p4)
 #####################################################
 
@@ -95,7 +95,7 @@ axs[1, 0].plot(t, nG[1000:2000], label = 'Net gain')
 axs[1, 0].plot(t, Q[1000:2000], label = 'Loss')
 axs[1, 0].plot(t, G[1000:2000], label = 'Gain')
 
-axs[1, 1].text(850, 0.0004, 'perturbation = 0.5', fontsize=6)
+axs[1, 1].text(850, 0.0004, 'perturbation = 0.4', fontsize=6)
 axs[1, 1].plot(t, P2, label = 'Perturbation', linewidth = 0.7, color ='plum')
 axs[1, 1].plot(t, I[1000:2000], label = 'Intensity', color='red')
 
@@ -103,7 +103,7 @@ axs[2, 0].plot(t, nG[2000:3000], label = 'Net gain')
 axs[2, 0].plot(t, Q[2000:3000], label = 'Loss')
 axs[2, 0].plot(t, G[2000:3000], label = 'Gain')
 
-axs[2, 1].text(850, 0.0008, 'perturbation = 2', fontsize=6)
+axs[2, 1].text(850, 75, 'perturbation = 0.85', fontsize=6)
 axs[2, 1].plot(t, P3, label = 'Perturbation', linewidth = 0.7, color='plum')
 axs[2, 1].plot(t, I[2000:3000], label = 'Intensity', color='red')
 
@@ -113,7 +113,7 @@ axs[3, 0].plot(t, Q[3000:4000], label = 'Loss')
 axs[3, 0].plot(t, G[3000:4000], label = 'Gain')
 axs[3, 1].set_ylabel('Intensity (u.arb)')
 
-axs[3, 1].text(850, 0.004, 'perturbation = 6', fontsize=6)
+axs[3, 1].text(850, 75, 'perturbation = 1', fontsize=6)
 axs[3, 1].plot(t, P4, label = 'Perturbation', linewidth = 0.7, color='plum')
 axs[3, 1].plot(t, I[3000:4000], label = 'Intensity', color='red')
 
