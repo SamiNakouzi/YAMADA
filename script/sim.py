@@ -26,13 +26,13 @@ class yamada_model:
         self.coh_pert = None
 
 
-    def perturbate(self, incoh_perturbation = 0, coh_perturbation = 0):
+    def perturbate(self, t, incoh_perturbation = 0, coh_perturbation = 0):
         if incoh_perturbation ==0:
-            self.incoh_pert = self.mu1
+            self.incoh_pert = interp1d(np.array(t), np.full((len(t)) , self.mu1), bounds_error=False, fill_value="extrapolate")
         else:
             self.incoh_pert = incoh_perturbation
         if coh_perturbation == 0:
-            self.coh_pert = self.I0
+            self.coh_pert = interp1d(np.array(t), np.full((len(t)), 0), bounds_error=False, fill_value="extrapolate")
         else:
             self.coh_pert = coh_perturbation
 
@@ -41,20 +41,16 @@ class yamada_model:
     def yamada_ode(self, y0, t):
         self.dGdt = self.b1*(self.incoh_pert(t) - y0[0] - y0[0]*y0[2])
         self.dQdt = self.b2*(self.mu2 - y0[1] - self.s*y0[1]*(y0[2]))
-        self.dIdt = (y0[2])*(y0[0] - y0[1] - 1) + self.beta*(y0[0] + self.eta1)**2
+        self.dIdt = (y0[2] - self.coh_pert(t))*(y0[0] - y0[1] - 1) + self.beta*(y0[0] + self.eta1)**2
 
         return [self.dGdt, self.dQdt, self.dIdt]
-
-    #def integrate(self, t, pert_timing, dt, nb_of_bits):
-        #for idx in range(nb_of_bits):
-            #self.time_cut.append(min(t))
-            #self.sol = odeint(self.yamada_ode, [self.G0, self.Q0, self.coh_pert], np.linspace(max(self.time_cut), pert_timing[idx], int(pert_timing[idx] - max(self.time_cut)+1)))
-            #self.time_cut.append(pert_timing[idx])
-            #self.sol_list.append(self.sol)
-            #self.sol = odeint(self.yamada_ode, [self.G0, self.Q0, self.coh_pert], np.linspace(max(self.time_cut), pert_timing[idx] + dt[idx],pert_timing[idx] + dt[idx] + int(max(self.time_cut)+1)))
-            #self.time_cut.append(pert_timing[idx]+dt[idx])
-            #self.sol_list.append(self.sol)
-        #self.sol_list.append(odeint(self.yamada_ode, [self.G0, self.Q0, self.coh_pert], (max(self.time_cut), max(t), max(t) + max(self.time_cut)+1)))
-        
+ 
     def integrate(self, t):
         self.sol = odeint(self.yamada_ode, [self.G0, self.Q0, self.I0], t)
+
+#t = np.linspace(0, 1000, 1001)
+#model = yamada_model(mu1 = 2.8)
+#model.perturbate(t)
+
+#print((model.incoh_pert(t)))
+
