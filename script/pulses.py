@@ -12,29 +12,45 @@ min_net = []
 model = yamada_model(mu1 = 2.8)
 
 #setting time steps:
-t = np.linspace(0, 1000, 1001)
+t = np.linspace(0, 2000, 2001)
 
 #perturbation amplitude
 rand = random.randint(0, 5)
-eps = [0.3, 0.8]#list(itertools.permutations([0.3, 0.5, 0.7]))[rand]# * nb_of_bits
+#For coherent perturbations:
+eps_coh= [0.2, 0.3]
+#For incoherent perturbations:
+eps_inc= [-0.8]
+
 
 #number of bits:
-nb_of_bits = len(eps)
+#For coherent perturbations:
+nb_of_bits_inc = len(eps_inc)
+#For incoherent perturbations:
+nb_of_bits_coh = len(eps_coh)
 
+#Perturbation duration:
 #pertuurbation duration:
-dt = [50] * nb_of_bits
+dt_coh = [30, 30]# * nb_of_bits_coh
+#For incoherent perturbations:
+dt_inc = [50] * nb_of_bits_inc
+
 
 #random bits
-bit =[1, 1, 1]#[1]*nb_of_bits# np.random.randint(0, 2, 100)
+bit_coh =[1, 1, 1]#[1]*nb_of_bits# np.random.randint(0, 2, 100)
+bit_inc = [1, 1, 1]
+
 
 #perturbation timing:
-#pert_t = np.arange(0, len(t)-1, int((len(t)-1)/nb_of_bits))
-pert_t = [100, 400]#, 250, 300, 350, 400, 450]#, 500, 600, 700, 800, 900, 1000]
+#For coherent perturbations:
+pert_t_coh = [200, 400]
+#For incoherent perturbations:
+pert_t_inc = [375]
+
 
 #bit time:
 bit_time = 100
 t_b = []
-for idx in range(len(pert_t)):
+for idx in range(len(pert_t_inc)):
     t_b.append(100 + (bit_time * idx))
 
 
@@ -67,7 +83,7 @@ def perturbate_coh(t = np.linspace(0, 2000, 2000), dt = [0], eps = [0], bits = [
         elif bits[idx] == 0 and neg_pulse == True:
             perturbation[elem : elem + dt[idx]] = -eps[idx]
             idx = idx + 1
-    samples = model.I0 + perturbation
+    samples = perturbation
 
     samples_t, samples = np.array(samples_t), np.array(samples)
     return interp1d(samples_t, samples, bounds_error=False, fill_value="extrapolate")
@@ -75,8 +91,9 @@ def perturbate_coh(t = np.linspace(0, 2000, 2000), dt = [0], eps = [0], bits = [
 net_gain = []
 intensity = []
 #Running pertuurbation + solving model
-pert = perturbate_inc(t, dt, eps, bit, pert_t)
-model.perturbate(pert)
+pert_inc = perturbate_inc(t, dt_inc, eps_inc, bit_inc, pert_t_inc)
+pert_coh = perturbate_coh(t, dt_coh, eps_coh, bit_coh, pert_t_coh)
+model.perturbate(t, pert_inc, pert_coh)
 model.integrate(t)
 x = model.sol.tolist()
 for idx in range(0, len(t)):
@@ -86,20 +103,21 @@ for idx in range(0, len(t)):
 
 #PLOTTING
 #plt.plot(eps, net_gain_list)
-fig, axs = plt.subplots(3, 1, sharex = True)
+fig, axs = plt.subplots(4, 1, sharex = True)
 axs[0].plot(t, net_gain, color = 'g', label = 'Net gain')
 axs[0].set_ylim(top = 2)
-axs[1].plot(t, model.incoh_pert(t), color = 'k', alpha = 0.5,  label = 'scaled perturbation')
-axs[1].set_ylim(top = (max(eps) + model.mu1 + 0.2))
+axs[1].plot(t, model.coh_pert(t), color = 'k', alpha = 0.5,  label = 'Coherent perturbation')
+axs[2].plot(t, model.incoh_pert(t), color = 'purple', alpha = 0.5,  label = 'Incoherent perturbation')
+axs[1].set_ylim(top = (max(eps_inc) + model.mu1 + 0.2))
 axs[0].text(100, 2.1, "$\mu_1 = $" + str(model.mu1), fontsize = 8)
-for idx in range(len(pert_t)):
-    axs[0].text(pert_t[idx], 1.3, str(bit[idx]), fontsize = 13)
-    axs[1].text(pert_t[idx], max(eps) + model.mu1 + 0.1, str(eps[idx]), fontsize = 8)
+for idx in range(len(pert_t_inc)):
+    axs[0].text(pert_t_inc[idx], 1.3, str(bit_coh[idx]), fontsize = 13)
+    axs[1].text(pert_t_inc[idx], max(eps_inc) + model.mu1 + 0.1, str(eps_inc[idx]), fontsize = 8)
     #axs[2].vlines(t_b[idx], color = 'blue',ymin = 0, ymax = max(intensity) + 10, ls = '--')
 plt.ylabel("Intensity (u.arb)")
 
 
-axs[2].plot(t, intensity, color = 'r', label = 'intensity')
+axs[3].plot(t, intensity, color = 'r', label = 'intensity')
 plt.xlabel("Time (u.arb)")
 fig.legend()
 plt.show()
