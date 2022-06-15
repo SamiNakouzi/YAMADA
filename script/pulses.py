@@ -12,14 +12,14 @@ min_net = []
 model = yamada_model(mu1 = 2.8)
 
 #setting time steps:
-t = np.linspace(0, 2000, 2001)
+t = np.linspace(0, 600, 601)
 
 #perturbation amplitude
 rand = random.randint(0, 5)
 #For coherent perturbations:
-eps_coh= [0.2, 0.3]
+eps_coh= [0.03, 0.05] 
 #For incoherent perturbations:
-eps_inc= [-0.8]
+eps_inc= [-1, 0.82]
 
 
 #number of bits:
@@ -32,7 +32,7 @@ nb_of_bits_coh = len(eps_coh)
 #pertuurbation duration:
 dt_coh = [30, 30]# * nb_of_bits_coh
 #For incoherent perturbations:
-dt_inc = [50] * nb_of_bits_inc
+dt_inc = [100, 100]
 
 
 #random bits
@@ -42,14 +42,14 @@ bit_inc = [1, 1, 1]
 
 #perturbation timing:
 #For coherent perturbations:
-pert_t_coh = [200, 400]
+pert_t_coh = [100, 200]
 #For incoherent perturbations:
-pert_t_inc = [375]
+pert_t_inc = [100, 200]
 
 
 #bit time:
 bit_time = 100
-t_b = []
+t_b = [100, 200, 300, 400]
 for idx in range(len(pert_t_inc)):
     t_b.append(100 + (bit_time * idx))
 
@@ -108,14 +108,14 @@ axs[0].plot(t, net_gain, color = 'g', label = 'Net gain')
 axs[0].set_ylim(top = 2)
 axs[1].plot(t, model.coh_pert(t), color = 'k', alpha = 0.5,  label = 'Coherent perturbation')
 axs[2].plot(t, model.incoh_pert(t), color = 'purple', alpha = 0.5,  label = 'Incoherent perturbation')
-axs[1].set_ylim(top = (max(eps_inc) + model.mu1 + 0.2))
+axs[1].set_ylim(top = (2*max(eps_coh) + model.I0))
 axs[0].text(100, 2.1, "$\mu_1 = $" + str(model.mu1), fontsize = 8)
 for idx in range(len(pert_t_inc)):
-    axs[0].text(pert_t_inc[idx], 1.3, str(bit_coh[idx]), fontsize = 13)
+    #axs[0].text(pert_t_inc[idx], 1.3, str(bit_coh[idx]), fontsize = 13)
     axs[1].text(pert_t_inc[idx], max(eps_inc) + model.mu1 + 0.1, str(eps_inc[idx]), fontsize = 8)
-    #axs[2].vlines(t_b[idx], color = 'blue',ymin = 0, ymax = max(intensity) + 10, ls = '--')
 plt.ylabel("Intensity (u.arb)")
-
+for idx in range(len(t_b)):
+    axs[3].vlines(t_b[idx], color = 'blue',ymin = 0, ymax = max(intensity) + 10, ls = '--')
 
 axs[3].plot(t, intensity, color = 'r', label = 'intensity')
 plt.xlabel("Time (u.arb)")
