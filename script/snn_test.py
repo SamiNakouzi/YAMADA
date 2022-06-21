@@ -50,9 +50,11 @@ model = yamada_model(mu1 = 2.8)
 t = np.linspace(0, 1000, 1001)
 
 #perturbation amplitude
-rand = random.randint(0, 5)
+rand = random.randint(0, 1)
+
 #For coherent perturbations:
-eps_coh= [0.03, 0.05, 0.05, 0.03] 
+amp = [0.03, 0.05]
+eps_coh= [0.03, 0.05, 0.05, 0.03, 0.05, 0.05, 0.03] 
 
 
 #number of bits:
@@ -61,19 +63,19 @@ nb_of_bits_coh = len(eps_coh)
 
 #Perturbation duration:
 #pertuurbation duration:
-dt_coh = [30, 30, 30, 30]# * nb_of_bits_coh
+dt_coh = [30, 30, 30, 30, 30, 30, 30]# * nb_of_bits_coh
 #For incoherent perturbations:
-dt_inc = [30, 30, 30, 30]
+dt_inc = [30, 30, 30, 30, 30, 30, 30]
 
 
 #random bits
-bit_coh =[1, 1, 1, 1]#[1]*nb_of_bits# np.random.randint(0, 2, 100)
-bit_inc = [1, 1, 1, 1]
+bit_coh =[1, 1, 1, 1, 1, 1, 1]#[1]*nb_of_bits# np.random.randint(0, 2, 100)
+bit_inc = [1, 1, 1, 1, 1, 1, 1]
 
 
 #perturbation timing:
 #For coherent perturbations:
-pert_t_coh = [100, 200, 300, 400]
+pert_t_coh = [100, 200, 300, 400, 500, 600, 700]
 #For incoherent perturbations:
 
 
@@ -81,9 +83,10 @@ pert_t_coh = [100, 200, 300, 400]
 intensity = []
 #Running pertuurbation + solving model
 #For incoherent perturbations:
-eps_inc= np.loadtxt("../data/pump.txt", dtype='d')
+eps_inc= np.loadtxt("../data/pump.txt", dtype='f')
+
 nb_of_bits_inc = len(eps_inc)
-pert_t_inc = [100, 200, 300, 400]
+pert_t_inc = [100, 200, 300, 400, 500, 600, 700]
 pert_inc = perturbate_inc(t, dt_inc, eps_inc, bit_inc, pert_t_inc)
 pert_coh = perturbate_coh(t, dt_coh, eps_coh, bit_coh, pert_t_coh)
 model.perturbate(t, pert_inc, pert_coh)
@@ -92,7 +95,7 @@ x = model.sol.tolist()
 for idx in range(0, len(t)):
     intensity.append(x[idx][2])
     
-print(eps_inc)
+
 with open('../data/intensity_run.txt','wt') as f:
     for line in intensity:
         f.write('%.5s\n' % line)
