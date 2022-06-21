@@ -12,14 +12,15 @@ min_net = []
 model = yamada_model(mu1 = 2.8)
 
 #setting time steps:
-t = np.linspace(0, 600, 601)
+t = np.linspace(0, 1000, 1001)
 
 #perturbation amplitude
 rand = random.randint(0, 5)
 #For coherent perturbations:
-eps_coh= [0.03, 0.05] 
+amp = [0.03, 0.05]
+eps_coh= [amp[random.randint(0, 1)], amp[random.randint(0, 1)],amp[random.randint(0, 1)],amp[random.randint(0, 1)],amp[random.randint(0, 1)],amp[random.randint(0, 1)],amp[random.randint(0, 1)]] 
 #For incoherent perturbations:
-eps_inc= [-1, 0.82]
+eps_inc= np.loadtxt("../data/pump.txt", dtype='f')
 
 
 #number of bits:
@@ -30,21 +31,21 @@ nb_of_bits_coh = len(eps_coh)
 
 #Perturbation duration:
 #pertuurbation duration:
-dt_coh = [30, 30]# * nb_of_bits_coh
+dt_coh = [30]* 7# * nb_of_bits_coh
 #For incoherent perturbations:
-dt_inc = [100, 100]
+dt_inc = [30]*7
 
 
 #random bits
-bit_coh =[1, 1, 1]#[1]*nb_of_bits# np.random.randint(0, 2, 100)
-bit_inc = [1, 1, 1]
+bit_coh =[1, 1, 1, 1, 1, 1, 1]#[1]*nb_of_bits# np.random.randint(0, 2, 100)
+bit_inc = [1, 1, 1, 1, 1, 1, 1]
 
 
 #perturbation timing:
 #For coherent perturbations:
-pert_t_coh = [100, 200]
+pert_t_coh = [100, 200, 300, 400, 500, 600, 700]
 #For incoherent perturbations:
-pert_t_inc = [100, 200]
+pert_t_inc = [100, 200, 300, 400, 500, 600, 700]
 
 
 #bit time:
@@ -99,10 +100,15 @@ x = model.sol.tolist()
 for idx in range(0, len(t)):
     net_gain.append(x[idx][0] - x[idx][1] - 1)
     intensity.append(x[idx][2])
-
-
-#PLOTTING
-#plt.plot(eps, net_gain_list)
+#accuracy = np.loadtxt("accuracy.txt", dtype='i')
+#if max(intensity[400:500]) >= 50:
+    #accuracy = accuracy + 1
+#print(accuracy)
+#f = open('accuracy.txt', 'wt')
+#f.write(str(accuracy))
+#f.close()
+##PLOTTING
+##plt.plot(eps, net_gain_list)
 fig, axs = plt.subplots(4, 1, sharex = True)
 axs[0].plot(t, net_gain, color = 'g', label = 'Net gain')
 axs[0].set_ylim(top = 2)
@@ -111,12 +117,12 @@ axs[2].plot(t, model.incoh_pert(t), color = 'purple', alpha = 0.5,  label = 'Inc
 axs[1].set_ylim(top = (2*max(eps_coh) + model.I0))
 axs[0].text(100, 2.1, "$\mu_1 = $" + str(model.mu1), fontsize = 8)
 for idx in range(len(pert_t_inc)):
-    #axs[0].text(pert_t_inc[idx], 1.3, str(bit_coh[idx]), fontsize = 13)
+    axs[0].text(pert_t_inc[idx], 1.3, str(bit_coh[idx]), fontsize = 13)
     axs[1].text(pert_t_inc[idx], max(eps_inc) + model.mu1 + 0.1, str(eps_inc[idx]), fontsize = 8)
 plt.ylabel("Intensity (u.arb)")
 for idx in range(len(t_b)):
     axs[3].vlines(t_b[idx], color = 'blue',ymin = 0, ymax = max(intensity) + 10, ls = '--')
-
+axs[3].vlines(450, ymax = 100, ymin = 0, ls = '--', color = 'green')
 axs[3].plot(t, intensity, color = 'r', label = 'intensity')
 plt.xlabel("Time (u.arb)")
 fig.legend()
