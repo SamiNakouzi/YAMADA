@@ -1,123 +1,40 @@
 import numpy as np
-import math
-import scipy as sp
 import matplotlib.pyplot as plt
-from scipy.integrate import odeint
-from matplotlib.animation import FuncAnimation
+from sim import yamada_model
+
+font = {'family' : 'normal',
+        'weight' : 'normal',
+        'size': 20}
+plt.rc('font', **font)
 
 
-def yamada_ode(x, t, perturbation):
-    #constants:
-    b1 = 0.005
-    b2 = 0.005
-    s = 10
-    mu1 = 2.8
-    mu2 = 2
-    B = 10**(-5)
-    eta1 = 1.6
-    dmu1 = perturbation
-    pmu1 = mu1 + dmu1*math.exp(-((t/25)-15)**100)
+net_gain = []
+intensity = []
+gain = []
+loss = []
 
-
-    #assign vector to each ODE:
-    G = x[0]
-    Q = x[1]
-    I = x[2]
-
-    #define each ODE:
-    dGdt = b1*(pmu1 - G - G*I)
-    dQdt = b2*(mu2 - Q - s*Q*I)
-    dIdt = I*(G - Q - 1) + B*(G + eta1)**2
-
-    return [dGdt, dQdt, dIdt]
-
-x0 = [2.8, 2, 0]
-Q = []
-I = []
-G = []
-t = np.linspace(0, 1000, 1000)
-
-##### for plotting ######
-
-P1 = []
-P2 = []
-P3 = []
-P4 = []
-per = []
-
-#########################
-
-
-for p in (0, 0.4, 0.85, 1):
-    perturbation = (p,)
-    per.append(p)
-    #x0 = [2.43, 2, 0 ]
-    x = odeint(yamada_ode, x0, t, perturbation)
-    x = x.tolist()
-    for j in range(0, 1000):
-        G.append(x[j][0])
-        Q.append(x[j][1])
-        I.append(x[j][2])
+model = yamada_model(mu1= 2.4)
+t = np.linspace(0, 100, 1001)
+model.perturbate(t)
+model.integrate(t)
+x = model.sol.tolist()
+for idx in range(len(t)):
+    net_gain.append(x[idx][0]-x[idx][1]-1)
+    intensity.append(x[idx][2])
+    gain.append(x[idx][0])
+    loss.append(x[idx][1])
 
 
 
-G = np.array(G)
-Q = np.array(Q)
-I = np.array(I)
-nG = G - Q - 1
-
-#Plotting:
-#Defining the perturbation for plot (not real valuesm but to scale with intensity):
-for time in t:
-    p1 = per[0]*math.exp(-((time/10)-30)**100)
-    P1.append(p1)
-    p2 =0.006*per[1]*math.exp(-((time/10)-30)**100)
-    P2.append(p2)
-    p3 = 100*per[2]*math.exp(-((time/10)-30)**100)
-    P3.append(p3)
-    p4 = 100*per[3]*math.exp(-((time/10)-30)**100)
-    P4.append(p4)
-#####################################################
-
-fig, axs = plt.subplots(4, 2, sharex= True)
-axs[0, 0].plot(t, nG[0:1000], label = 'Net gain')
-axs[0, 0].plot(t, Q[0:1000], label = 'Loss')
-axs[0, 0].plot(t, G[0:1000], label = 'Gain')
-axs[0,0].legend(loc = 7, prop={'size' : 6})
-
-
-axs[0, 1].text(850, 0.00025, 'no perturbation', fontsize=6)
-axs[0, 1].plot(t, I[0:1000], label = 'Intensity', color='red')
-axs[0, 1].plot(t, P1, label = 'Perturbation', linewidth = 0.7, color='plum')
-axs[0, 1].legend(loc = 7, prop={'size' : 6})
-
-axs[1, 0].plot(t, nG[1000:2000], label = 'Net gain')
-axs[1, 0].plot(t, Q[1000:2000], label = 'Loss')
-axs[1, 0].plot(t, G[1000:2000], label = 'Gain')
-
-axs[1, 1].text(850, 0.0004, 'perturbation = 0.4', fontsize=6)
-axs[1, 1].plot(t, P2, label = 'Perturbation', linewidth = 0.7, color ='plum')
-axs[1, 1].plot(t, I[1000:2000], label = 'Intensity', color='red')
-
-axs[2, 0].plot(t, nG[2000:3000], label = 'Net gain')
-axs[2, 0].plot(t, Q[2000:3000], label = 'Loss')
-axs[2, 0].plot(t, G[2000:3000], label = 'Gain')
-
-axs[2, 1].text(850, 75, 'perturbation = 0.85', fontsize=6)
-axs[2, 1].plot(t, P3, label = 'Perturbation', linewidth = 0.7, color='plum')
-axs[2, 1].plot(t, I[2000:3000], label = 'Intensity', color='red')
-
-
-axs[3, 0].plot(t, nG[3000:4000], label = 'Net gain')
-axs[3, 0].plot(t, Q[3000:4000], label = 'Loss')
-axs[3, 0].plot(t, G[3000:4000], label = 'Gain')
-axs[3, 1].set_ylabel('Intensity (u.arb)')
-
-axs[3, 1].text(850, 75, 'perturbation = 1', fontsize=6)
-axs[3, 1].plot(t, P4, label = 'Perturbation', linewidth = 0.7, color='plum')
-axs[3, 1].plot(t, I[3000:4000], label = 'Intensity', color='red')
-
-
-plt.xlabel('Time (u.arb)')
-fig.suptitle('Different lasing regimes using the Yamada Model (Short pulse perturbation)')
+fig, axs = plt.subplots(2, 1, sharex = True)
+axs[0].plot(t, gain, label = 'Gain')
+axs[0].text(10, 3.8, '$\mu_1 = 3.2$')
+axs[0].plot(t, loss, label = 'Loss')
+axs[0].plot(t, net_gain, label = 'Net gain')
+axs[0].legend()
+axs[1].plot(t, intensity, color = 'red', label = 'Intensity')
+plt.xlabel('Time(U.arb)')
+plt.ylabel('Intensity (U.arb)')
+plt.legend()
 plt.show()
+
