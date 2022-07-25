@@ -6,17 +6,17 @@ The Yamada model is the following:
 
 $\dot{G} = b1 \left[\mu_1 - G(1+I) \right]$\
 $\dot{Q} = b2 \left[ \mu_2 - Q(1+sI ) \right]$ \
-$dot{I} = I \left(G - Q - 1\right) - \beta_{sp} (1+\eta_1)^2$
+$\dot{I} = I \left(G - Q - 1\right) - \beta_{sp} (1+\eta_1)^2$
 
 
 **1. Running the model**
 
-first import the model: *from sim import yamada\_model*
-A simple line is used to run the model which is : *model = yamada\_model(s, mu1, mu2, eta1, beta, b1, b2, G0, Q0, I0)*
+first import the model: *from sim import yamada\_model*\
+A simple line is used to run the model which is : *model = yamada\_model(s, mu1, mu2, eta1, beta, b1, b2, G0, Q0, I0)*\
 ![Import](img/import.png)
 **2. Perturbations**
-By default there are no perturbations added, however for the script to successfully run the perturbation line code should be written:
-*model.perturbate(t, dt, eps, bits, pert\_timing, neg\_pulse )*
+By default there are no perturbations added, however for the script to successfully run the perturbation line code should be written:\
+*model.perturbate(t, dt, eps, bits, pert\_timing, neg\_pulse )*\
 all the arguments are optional and have default values so that woth no arguments there are no perturbations. In the following each argument will be explained:
 
 - **t:** type: **array**. Are the timesteps desired. *default is: np.linspace(0, 2000, 2000)*
