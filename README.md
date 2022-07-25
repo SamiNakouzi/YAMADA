@@ -4,9 +4,9 @@
 This is a project that aims at simulating a spiking laser using the Yamada model. It is easily possible to add coherent and incoherent perturbations to the system, and it is very easy to manipulate.
 The Yamada model is the following:
 
-$\dot{G} = b1 \left[\mu_1 - G(1+I) \right]$
-$\dot{Q} = b2 \left[ \mu_2 - Q(1+sI ) \right]$ 
-$dot{I} = I \left(G - Q - 1) - \beta_{sp} (1+\eta_1)^2$
+$\dot{G} = b1 \left[\mu_1 - G(1+I) \right]$\
+$\dot{Q} = b2 \left[ \mu_2 - Q(1+sI ) \right]$ \
+$dot{I} = I \left(G - Q - 1\right) - \beta_{sp} (1+\eta_1)^2$
 
 
 **1. Running the model**
