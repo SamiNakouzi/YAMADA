@@ -13,7 +13,7 @@ $\dot{I} = I \left(G - Q - 1\right) - \beta_{sp} (1+\eta_1)^2$
 
 first import the model: **from sim import yamada\_model**\
 A simple line is used to run the model which is : **model = yamada\_model(s, mu1, mu2, eta1, beta, b1, b2, G0, Q0, I0)**\
-![starting](img/import.png)\
+![import](https://user-images.githubusercontent.com/60350687/180771050-1703a062-35d6-4f6c-8ae2-44fe29b3d713.png)
 \
 **2. Perturbations**
 By default there are no perturbations added, however for the script to successfully run the perturbation line code should be written:\
@@ -34,3 +34,4 @@ we won't add a perturbation. *As a default value it is set as [1] so that if the
 - **neg__\__pulse:** If **True** will execute a negative perturbation if the bit is zero. *Default value is ****false****.
 
 \end{document}
+
