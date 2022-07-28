@@ -19,10 +19,6 @@ model = yamada_model()
 
 ```
 
-
-
-![import](https://user-images.githubusercontent.com/60350687/180771050-1703a062-35d6-4f6c-8ae2-44fe29b3d713.png)
-\
 **2. Perturbations**\
 
 By default there are no perturbations added, however for the script to successfully run the perturbation line code should be written:\
@@ -46,6 +42,8 @@ In the "pulses.py" file there are many parameters that the user can control to c
 **bit_\_coh** and **bit_\_inc** are **lists** who's elements define wether a perturbation is an input bit 1 or 0. This was only important for a specific project, but it has to be there for the code to run. However it is a parameter that can be ignored.
 
 **pert_\_t_\_coh** and **pert_\_t_\_inc** are **lists** who's element define at what time each perturbation spikes independently.
+
+Then perturbations are defined like the following:
 ```python
 def perturbate_inc(t , dt, bits, pert_timing, neg_pulse = False):
     samples_t = t
@@ -64,5 +62,23 @@ def perturbate_inc(t , dt, bits, pert_timing, neg_pulse = False):
     return interp1d(samples_t, samples, bounds_error=False, fill_value="extrapolate")
     
 ```
-If **neg_pulse** is true, it will define negative perturbations if the bit = 0.
+If **neg_pulse** is true, it will define negative perturbations if the bit = 0.\
+
+To run and integrate the user just needs to input the perturbation function in the perturbate function defining wether it is coherent or incoherent. In "pulses.py" we have both:
+
+```python
+pert_inc = perturbate_inc(t, dt_inc, eps_inc, bit_inc, pert_t_inc)
+pert_coh = perturbate_coh(t, dt_coh, eps_coh, bit_coh, pert_t_coh)
+model.perturbate(t, pert_inc, pert_coh)
+model.integrate(t)
+```
+Finally to get the solution type:
+```python
+x = model.sol.tolist()
+for idx in range(len(t)):
+    intensity.append(x[idx][2])
+    gain.append(x[idx][0])
+    loss.append(x[idx][1])
+```
+
 \end{document}
