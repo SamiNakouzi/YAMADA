@@ -80,5 +80,3 @@ for idx in range(len(t)):
     gain.append(x[idx][0])
     loss.append(x[idx][1])
 ```
-
-\end{document}
