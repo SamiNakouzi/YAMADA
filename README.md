@@ -46,7 +46,7 @@ In the "pulses.py" file there are many parameters that the user can control to c
 **bit_\_coh** and **bit_\_inc** are **lists** who's elements define wether a perturbation is an input bit 1 or 0. This was only important for a specific project, but it has to be there for the code to run. However it is a parameter that can be ignored.
 
 **pert_\_t_\_coh** and **pert_\_t_\_inc** are **lists** who's element define at what time each perturbation spikes independently.
-```
+```python
 def perturbate_inc(t , dt, bits, pert_timing, neg_pulse = False):
     samples_t = t
     samples   = []
