@@ -62,7 +62,7 @@ def perturbate_inc(t , dt, bits, pert_timing, neg_pulse = False):
     return interp1d(samples_t, samples, bounds_error=False, fill_value="extrapolate")
     
 ```
-If **neg_pulse** is true, it will define negative perturbations if the bit = 0.\
+If **neg_pulse** is true, it will define negative perturbations if the bit = 0.
 
 To run and integrate the user just needs to input the perturbation function in the perturbate function defining wether it is coherent or incoherent. In "pulses.py" we have both:
 
@@ -80,3 +80,4 @@ for idx in range(len(t)):
     gain.append(x[idx][0])
     loss.append(x[idx][1])
 ```
+Any type of perturbation can be defined, but will have to be written as time dependent interpolated functions.

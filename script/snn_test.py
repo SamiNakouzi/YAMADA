@@ -54,7 +54,7 @@ rand = random.randint(0, 1)
 
 #For coherent perturbations:
 amp = [0.03, 0.05]
-eps_coh= [0.03, 0.05, 0.05, 0.03, 0.05, 0.05, 0.03] 
+eps_coh= [0.03, 0.05, 0.03, 0.05, 0.03, 0.05, 0.03] 
 
 
 #number of bits:
@@ -65,7 +65,7 @@ nb_of_bits_coh = len(eps_coh)
 #pertuurbation duration:
 dt_coh = [30, 30, 30, 30, 30, 30, 30]# * nb_of_bits_coh
 #For incoherent perturbations:
-dt_inc = [30, 30, 30, 30, 30, 30, 30]
+dt_inc = [30]*7
 
 
 #random bits

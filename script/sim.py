@@ -41,7 +41,7 @@ class yamada_model:
     def yamada_ode(self, y0, t):
         self.dGdt = self.b1*(self.incoh_pert(t) - y0[0] - y0[0]*y0[2])
         self.dQdt = self.b2*(self.mu2 - y0[1] - self.s*y0[1]*(y0[2]))
-        self.dIdt = (y0[2] - self.coh_pert(t))*(y0[0] - y0[1] - 1) + self.beta*(y0[0] + self.eta1)**2
+        self.dIdt = self.coh_pert(t) + y0[2]*(y0[0] - y0[1] - 1) + self.beta*(y0[0] + self.eta1)**2
 
         return [self.dGdt, self.dQdt, self.dIdt]
  
