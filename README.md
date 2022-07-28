@@ -13,12 +13,11 @@ $\dot{I} = I \left(G - Q - 1\right) - \beta_{sp} (1+\eta_1)^2$
 
 first import the model: **from sim import yamada\_model**\
 A simple line is used to run the model which is : **model = yamada\_model(s, mu1, mu2, eta1, beta, b1, b2, G0, Q0, I0)**\
-´´´
-
+```
 from sim import yamada_model
 model = yamada_model()
 
-´´´
+```
 
 
 
