@@ -77,18 +77,19 @@ bit_inc = [1]*len(eps_coh)
 pert_t_coh = []
 for idx in range(len(eps_coh)):
     pert_t_coh.append(100+ idx*100)
-#For incoherent perturbations:
-
-#bit time:
 intensity = []
-#Running pertuurbation + solving model
-#For incoherent perturbations:
+
+
+#Loading the pump from the updated pump.txt file (initially pump is mu_1)
 eps_inc= np.loadtxt("../../data/pump.txt", dtype='f')
 
 nb_of_bits_inc = len(eps_inc)
+
 pert_t_inc = []
 for idx in range(len(eps_coh)):
     pert_t_inc.append(100+idx*100)
+    
+#Running the simulation with the given parameters
 pert_inc = perturbate_inc(t, dt_inc, eps_inc, bit_inc, pert_t_inc)
 pert_coh = perturbate_coh(t, dt_coh, eps_coh, bit_coh, pert_t_coh)
 model.perturbate(t, pert_inc, pert_coh)
@@ -97,13 +98,18 @@ x = model.sol.tolist()
 for idx in range(0, len(t)):
     intensity.append(x[idx][2])
     
-
+#Saving the output in a text file that's going to be loaded for the learning rule
 with open('../../data/intensity_run.txt','wt') as f:
     for line in intensity:
         f.write('%.5s\n' % line)
+
+
+#Saving the input spike times in a text file that's going to be loaded for the learning rule
 with open('../../data/input.txt','wt') as f:
     for line in pert_t_coh:
         f.write('%.5s\n' % line)
+
+
 with open('../../data/pump_init.txt','wt') as f:
     for line in eps_inc:
         f.write('%.5s\n' % line)
