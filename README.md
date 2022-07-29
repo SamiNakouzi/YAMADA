@@ -11,18 +11,18 @@ $\dot{I} = I \left(G - Q - 1\right) - \beta_{sp} (1+\eta_1)^2$
 
 **1. Running the model**
 
-first import the model: **from sim import yamada\_model**\
-A simple line is used to run the model which is : **model = yamada\_model(s, mu1, mu2, eta1, beta, b1, b2, G0, Q0, I0)**\
+first import the model: **from sim import yamada\_model**
+A simple line is used to run the model which is : **model = yamada\_model(s, mu1, mu2, eta1, beta, b1, b2, G0, Q0, I0)**
 ```python
 from sim import yamada_model
 model = yamada_model()
 
 ```
 
-**2. Perturbations**\
+**2. Perturbations**
 
 By default there are no perturbations added, however for the script to successfully run the perturbation line code should be written:\
-**model.perturbate(t, pert_inc, pert_coh )**\
+**model.perturbate(t, pert_inc, pert_coh )**
 all the arguments are optional and have default values. If no arguments are added there will be no perturbations. In the following each argument will be explained:
 
 _NB: During this project perturbations were thought of as input bits. The script is written based on that representation._
@@ -34,14 +34,14 @@ _NB: During this project perturbations were thought of as input bits. The script
 - **pert_coh:** type:**list** or **array**. Is a function defining coherent perturbation. *default is 0* (no perturbation)
 
 Adding one or many perturbations requires the user to write a function that will shape the perturbation. An example is given in the "pulses.py" file where perturbations are moddeled as sqaure perturbation.
-In the "pulses.py" file there are many parameters that the user can control to change the amplitude and duration of perturbations independently:
-**eps_\_coh** and **eps_\_inc** are **lists** who's elements define the amplitude of each perturbation (index 0 for the first perturbation, index 1 for the second and so on...) for coherent and incoherent perturbations respectively.
+In the "script/pulses.py" file there are many parameters that the user can control to change the amplitude and duration of perturbations independently:
+**eps_coh** and **eps_inc** are **lists** who's elements define the amplitude of each perturbation (index 0 for the first perturbation, index 1 for the second and so on...) for coherent and incoherent perturbations respectively.
 
-**dt_\_coh** and **dt_\_inc** are **lists** who's elements define the duration of each perturbation independently.
+**dt_coh** and **dt_inc** are **lists** who's elements define the duration of each perturbation independently.
 
-**bit_\_coh** and **bit_\_inc** are **lists** who's elements define wether a perturbation is an input bit 1 or 0. This was only important for a specific project, but it has to be there for the code to run. However it is a parameter that can be ignored.
+**bit_coh** and **bit_inc** are **lists** who's elements define wether a perturbation is an input bit 1 or 0. This was only important for a specific project, but it has to be there for the code to run. However it is a parameter that can be ignored.
 
-**pert_\_t_\_coh** and **pert_\_t_\_inc** are **lists** who's element define at what time each perturbation spikes independently.
+**pert_t_coh** and **pert_t_inc** are **lists** who's element define at what time each perturbation spikes independently.
 
 Then perturbations are defined like the following:
 ```python
