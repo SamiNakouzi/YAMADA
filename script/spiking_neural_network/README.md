@@ -15,4 +15,16 @@ eps_coh= [0.03, 0.05, 0.03, 0.05, 0.03, 0.05, 0.03]
 ```
 all the other parameters don't need to be changed.
 
-Then in the **"snn_model.py"** file there is the rule for the learning algorithm. the first important parameter is **t_d** which is a list representing the desired spike times.
+Then in the **"snn_model.py"** file there is the rule for the learning algorithm. the first important parameter is **t_d** which is a list representing the desired spike times. The user can define this list and an example that is already in the file is:
+```python
+td = [170, 350, 660]
+```
+Where we tell the algorith that we want our laser to spike at time **170**, **350**, and **660**.
+The remaining parameters will be loaded from other text files and do not need any kinf of edditing.
+
+**Learning rule**
+Consider we have an input spike train, an actual output spike train and a desired output spike train:
+![spike_train_example](https://user-images.githubusercontent.com/60350687/181753201-9f9136cf-f92a-4926-8e08-1eaa78475351.png)
+
+The learning rule that is going to tell the pump how to evolve under each input coherent perturbation is the following:
+![Learningrule](https://user-images.githubusercontent.com/60350687/181753026-fb7bdcab-3e5e-4b38-a0b0-5d170045a26e.png).
