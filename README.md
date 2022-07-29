@@ -35,6 +35,7 @@ _NB: During this project perturbations were thought of as input bits. The script
 
 Adding one or many perturbations requires the user to write a function that will shape the perturbation. An example is given in the "pulses.py" file where perturbations are moddeled as sqaure perturbation.
 In the "script/pulses.py" file there are many parameters that the user can control to change the amplitude and duration of perturbations independently:
+
 **eps_coh** and **eps_inc** are **lists** who's elements define the amplitude of each perturbation (index 0 for the first perturbation, index 1 for the second and so on...) for coherent and incoherent perturbations respectively.
 
 **dt_coh** and **dt_inc** are **lists** who's elements define the duration of each perturbation independently.
