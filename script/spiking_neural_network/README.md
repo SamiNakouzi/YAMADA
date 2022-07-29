@@ -25,7 +25,7 @@ The remaining parameters will be loaded from other text files and do not need an
 **Learning rule**
 Consider we have an input spike train, an actual output spike train and a desired output spike train:
 
-<img src="https://user-images.githubusercontent.com/60350687/181753201-9f9136cf-f92a-4926-8e08-1eaa78475351.png" alt="spike_train_example" width="200"/>
+<img src="https://user-images.githubusercontent.com/60350687/181753201-9f9136cf-f92a-4926-8e08-1eaa78475351.png" alt="spike_train_example" width="500"/>
 The learning rule that is going to tell the pump how to evolve under each input coherent perturbation is the following:
 
 ![Learningrule](https://user-images.githubusercontent.com/60350687/181753026-fb7bdcab-3e5e-4b38-a0b0-5d170045a26e.png).
