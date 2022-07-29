@@ -27,13 +27,14 @@ all the arguments are optional and have default values. If no arguments are adde
 
 _NB: During this project perturbations were thought of as input bits. The script is written based on that representation._
 
-- **t:** type: **array**. Are the timesteps desired. *default is: np.linspace(0, 2000, 2000)*
+- **t:** type: **array**. Are the timesteps desired. **default is: np.linspace(0, 2000, 2000)**
 
-- **pert_inc:** type:**list** or **array**. Is a function defining incoherent perturbation. *default is 0* (no perturbation)
+- **pert_inc:** type:**list** or **array**. Is a function defining incoherent perturbation. **default is: 0** (no perturbation)
 
-- **pert_coh:** type:**list** or **array**. Is a function defining coherent perturbation. *default is 0* (no perturbation)
+- **pert_coh:** type:**list** or **array**. Is a function defining coherent perturbation. **default is: 0** (no perturbation)
 
 Adding one or many perturbations requires the user to write a function that will shape the perturbation. An example is given in the "pulses.py" file where perturbations are moddeled as sqaure perturbation.
+**Script example : Pulses.py**
 In the "script/pulses.py" file there are many parameters that the user can control to change the amplitude and duration of perturbations independently:
 
 **eps_coh** and **eps_inc** are **lists** who's elements define the amplitude of each perturbation (index 0 for the first perturbation, index 1 for the second and so on...) for coherent and incoherent perturbations respectively.
@@ -44,7 +45,7 @@ In the "script/pulses.py" file there are many parameters that the user can contr
 
 **pert_t_coh** and **pert_t_inc** are **lists** who's element define at what time each perturbation spikes independently.
 
-Then perturbations are defined like the following:
+Then perturbations are by functions, they have to be interpolated as the following example:
 ```python
 def perturbate_inc(t , dt, bits, pert_timing, neg_pulse = False):
     samples_t = t
@@ -64,6 +65,7 @@ def perturbate_inc(t , dt, bits, pert_timing, neg_pulse = False):
     
 ```
 If **neg_pulse** is true, it will define negative perturbations if the bit = 0.
+This function will add perturbations with amplitudes, durations, and timing defined by the user.
 
 To run and integrate the user just needs to input the perturbation function in the perturbate function defining wether it is coherent or incoherent. In "pulses.py" we have both:
 
