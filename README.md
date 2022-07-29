@@ -33,9 +33,9 @@ _NB: During this project perturbations were thought of as input bits. The script
 
 - **pert_coh:** type:**list** or **array**. Is a function defining coherent perturbation. **default is: 0** (no perturbation)
 
-Adding one or many perturbations requires the user to write a function that will shape the perturbation. An example is given in the "pulses.py" file where perturbations are moddeled as sqaure perturbation.\
+Adding one or many perturbations requires the user to write a function that will shape the perturbation. An example is given in the "pulses.py" file where perturbations are moddeled as sqaure perturbation.
 
-**Script example : Pulses.py**\
+**Script example : Pulses.py**
 
 In the "script/pulses.py" file there are many parameters that the user can control to change the amplitude and duration of perturbations independently:
 
