@@ -47,9 +47,10 @@ In the "script/pulses.py" file there are many parameters that the user can contr
 
 **pert_t_coh** and **pert_t_inc** are **lists** who's element define at what time each perturbation spikes independently.
 
-Then perturbations are by functions, they have to be interpolated as the following example:
+Then perturbations are by functions, they have to be interpolated as the following example: (you will have to import scipy)
 ```python
-def perturbate_inc(t , dt, bits, pert_timing, neg_pulse = False):
+from scipy.interpolate import interp1d
+def perturbate_inc(t , dt, eps, bits, pert_timing, neg_pulse = False):
     samples_t = t
     samples   = []
     perturbation = np.zeros((len(samples_t),))
@@ -79,6 +80,7 @@ model.integrate(t)
 ```
 Finally to get the solution type:
 ```python
+intensity, gain, loss = [], [], []
 x = model.sol.tolist()
 for idx in range(len(t)):
     intensity.append(x[idx][2])
