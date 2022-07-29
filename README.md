@@ -18,7 +18,10 @@ from sim import yamada_model
 model = yamada_model()
 
 ```
-
+A time interval has to also be defined. The easiest method is to use linspace from the numpy package:
+```python
+t = np.linspace(0, 1000, 1001)
+```
 **2. Perturbations**
 
 By default there are no perturbations added, however for the script to successfully run the perturbation line code should be written:\
