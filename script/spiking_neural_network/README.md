@@ -27,6 +27,7 @@ After that to run the algorithm run on the terminal the **pipe.sh** file:
 ```
 bash pipe.sh
 ```
+The user will be then asked to chose over how many epochs they want to run the algorithm.
 
 **Learning rule**
 Consider we have an input spike train, an actual output spike train and a desired output spike train:
