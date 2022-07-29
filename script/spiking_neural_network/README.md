@@ -22,6 +22,12 @@ td = [170, 350, 660]
 Where we tell the algorith that we want our laser to spike at time **170**, **350**, and **660**.
 The remaining parameters will be loaded from other text files and do not need any kinf of edditing.
 
+In short to quickly use the algorithm the user will just have to change the input coherent perturbation **eps_coh** in the **snn_test.py** file and then define the desired output time **t_d** in the **snn_model.py** file.
+After that to run the algorithm run on the terminal the **pipe.sh** file:
+```
+bash pipe.sh
+```
+
 **Learning rule**
 Consider we have an input spike train, an actual output spike train and a desired output spike train:
 
@@ -29,3 +35,4 @@ Consider we have an input spike train, an actual output spike train and a desire
 The learning rule that is going to tell the pump how to evolve under each input coherent perturbation is the following:
 
 <img src="https://user-images.githubusercontent.com/60350687/181753026-fb7bdcab-3e5e-4b38-a0b0-5d170045a26e.png" alt="Learningrule" width="550"/>
+
