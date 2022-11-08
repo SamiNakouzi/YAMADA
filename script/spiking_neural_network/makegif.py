@@ -23,4 +23,4 @@ for x in range(0, 9):
     images.append(im)
 
 # save as a gif   
-images[0].save('ReSuMetest_3.gif', save_all=True, append_images=images[1:], optimize=False, duration=500, loop=0)
+images[0].save('../../data/ReSuMetest_3.gif', save_all=True, append_images=images[1:], optimize=False, duration=500, loop=0)

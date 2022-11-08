@@ -1,15 +1,10 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from scipy.integrate import odeint
-from scipy.interpolate import interp1d
 from sim import yamada_model
-from sklearn import datasets, svm, metrics
+from sklearn import datasets
 from sklearn.model_selection import train_test_split
-import itertools
-import random
 
-#Defining the Perturbation:
-def perturbate_inc(t = np.linspace(0, 2000, 2000), dt = [0], eps = [0], bits = [1], pert_timing = [300], neg_pulse = False):
+def perturbate_inc(t=np.linspace(0, 2000, 2000), dt=[0], eps=[0], bits=[1], pert_timing=[300], neg_pulse=False):
     samples_t = t
     samples   = []
     perturbation = np.zeros((len(samples_t),))
@@ -25,7 +20,7 @@ def perturbate_inc(t = np.linspace(0, 2000, 2000), dt = [0], eps = [0], bits = [
     samples_t, samples = np.array(samples_t), np.array(samples)
     return interp1d(samples_t, samples, bounds_error=False, fill_value="extrapolate")
 
-def perturbate_coh(t = np.linspace(0, 2000, 2000), dt = [0], eps = [0], bits = [1], pert_timing = [300], neg_pulse = False):
+def perturbate_coh(t=np.linspace(0, 2000, 2000), dt=[0], eps=[0], bits=[1], pert_timing=[300], neg_pulse=False):
     samples_t = t
     samples   = []
     perturbation = np.zeros((len(samples_t),))
@@ -41,44 +36,7 @@ def perturbate_coh(t = np.linspace(0, 2000, 2000), dt = [0], eps = [0], bits = [
     samples_t, samples = np.array(samples_t), np.array(samples)
     return interp1d(samples_t, samples, bounds_error=False, fill_value="extrapolate")
 
-#upload sklearn handwritten digits:
-digits = datasets.load_digits()
-
-#flatten data:
-n_samples = len(digits.images)
-data = digits.images.reshape
-print(n_samples)
-
-
-# Split data into 50% train and 50% test subsets
-x_train, x_test, y_train, y_test = train_test_split(
-    data, digits.target, test_size=0.5, shuffle=False
-)
-X_train = []
-Y_train = []
-idxs = []
-for idx in range(len(y_train)):
-    if y_train[idx] == 0 or y_train[idx] == 3 or y_train[idx] == 9:
-        idxs.append(idx)
-for idx in idxs:
-    X_train.append(x_train[idx])
-    Y_train.append(y_train[idx])
-for idx in range(len(X_train)):
-    X_train[idx] = X_train[idx]*0.01 + 0.03
-
-exit()
-#Running simulation
-model = yamada_model(mu1 = 2.8)
-
-#setting time steps:
-t = np.linspace(0, 1000, 1001)
-
-#perturbation amplitude
-rand = random.randint(0, 1)
-
-#For coherent perturbations:
-amp = [0.03, 0.05]
-eps_coh= [amp[random.randint(0, 1)], amp[random.randint(0, 1)],amp[random.randint(0, 1)],amp[random.randint(0, 1)],amp[random.randint(0, 1)],amp[random.randint(0, 1)],amp[random.randint(0, 1)]] 
+eps_coh= [0.03, 0.05, 0.05, 0.03, 0.05, 0.05, 0.03] 
 
 
 #number of bits:
@@ -118,14 +76,28 @@ model.integrate(t)
 x = model.sol.tolist()
 for idx in range(0, len(t)):
     intensity.append(x[idx][2])
-    
+ 
 
-with open('../data/intensity_run.txt','wt') as f:
-    for line in intensity:
-        f.write('%.5s\n' % line)
-with open('../data/input.txt','wt') as f:
-    for line in pert_t_coh:
-        f.write('%.5s\n' % line)
-with open('../data/pump_init.txt','wt') as f:
-    for line in eps_inc:
-        f.write('%.5s\n' % line)
+#upload sklearn handwritten digits:
+digits = datasets.load_digits()
+
+#flatten data:
+data = digits.images
+
+# Split and shuffle 
+X_train, X_test, y_train, y_test = train_test_split(
+    data, digits.target, test_size=0.9, shuffle=True)
+
+# Filter 0,3,9 labels and encode
+idx = np.where((y_train==0) | (y_train==8))[0]
+X_train = X_train[idx,:,:]*0.01+0.03
+y_train = y_train[idx]
+
+model = yamada_model(mu1=2.8)
+t = np.linspace(0, 2000, num=2001)
+
+for i, elem in enumerate(X_train):
+    for j in range(8): 
+        row = elem[j,:]
+        y_pred = model.perturbate(t)
+        correction(y_pred, y_train[i])

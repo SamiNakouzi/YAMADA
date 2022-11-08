@@ -20,3 +20,4 @@ echo "Network has learned"
 echo "Plotting evolution of the output and creating gif"
 
 python3 learning_study.py
+python3 makegif.py

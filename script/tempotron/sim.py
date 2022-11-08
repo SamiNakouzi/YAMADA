@@ -3,7 +3,6 @@ import matplotlib.pyplot as plt
 from scipy.integrate import odeint
 from scipy.interpolate import interp1d
 
-
 class yamada_model:
     def __init__(self, s=10, mu1 = 2.43, mu2 = 2, eta1 = 1.6, beta = 10**(-5), b1 = 0.005, b2 = 0.005):
         self.s = s
@@ -35,8 +34,6 @@ class yamada_model:
             self.coh_pert = interp1d(np.array(t), np.full((len(t)), 0), bounds_error=False, fill_value="extrapolate")
         else:
             self.coh_pert = coh_perturbation
-
-
 
     def yamada_ode(self, y0, t):
         self.dGdt = self.b1*(self.incoh_pert(t) - y0[0] - y0[0]*y0[2])
