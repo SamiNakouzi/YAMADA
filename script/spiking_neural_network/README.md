@@ -9,7 +9,10 @@ Here you will find a user's guide to running the algorithm:
 The objective of the algorithm is to implement a learning rule capable of finding a pump configuration that allows the laser to spike at a desired time for a given input.
 
 **1. User's guide**
-
+To start create a folder and name it **makegif** by writing this command on your console:
+```python
+mkdir makegif
+```
 The **"snn_test.py"** file contains the important parameters that the user can change. As stated above the script is written in similar fashion as the **pulses.py** file ([click here](https://github.com/SamiNakouzi/YAMADA) for guide).
 The only parameter needed to be changed by the user is the input perturbation **eps_coh** which is a list of amplitudes for each perturbation. An example is already written:
 ```python
